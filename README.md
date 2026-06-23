@@ -1,1 +1,7 @@
-# pos-disciplina-06-ferramentas-de-ia-para-devops
+# Pós Disciplina 06 - Ferramentas de IA para DevOps
+
+## Introdução
+Pendente...
+
+## Módulos
+Pendente...
