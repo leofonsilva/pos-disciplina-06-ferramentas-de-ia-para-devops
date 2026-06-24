@@ -67,4 +67,44 @@ rm -rf .venv
 ```
 
 ## Módulos
-Pendente...
+
+### Módulo 01: Fundamentos e Arquitetura de IA para Infraestrutura
+
+#### **Projeto:** [Compliance Architect](module-01)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **RAG simples** - Tool que injeta políticas corporativas no contexto
+
+**Conceitos abordados:**
+- IA consultiva: o agente **recomenda**, não executa ações destrutivas
+- Anatomia de um agente CrewAI: `role`, `goal`, `backstory`, `tools`, `llm`
+- Tool de compliance (`check_compliance_rules`) como base de conhecimento
+- Fluxo mínimo: 1 agente + 1 task + `Crew.kickoff()`
+- Centralização do LLM e da fábrica de agentes (`core/`)
+
+**Aplicação prática:**
+O **Arquiteto de Cloud Nexus** projeta um bucket S3 para logs consultando as normas
+internas da empresa. A tool retorna as regras (prefixo `nexus-`, região `us-east-1`,
+buckets sempre privados) e o agente entrega um plano aderente a essas políticas.
+
+**Comandos executados:**
+```bash
+cd module-01
+python labs/modulo1_foundation.py
+```
+
+**Arquitetura:**
+```
+Task (desenhar bucket S3)
+    ↓
+Crew.kickoff()
+    ↓
+Agent: Arquiteto de Cloud  ←→  LLM (Groq/Llama)
+    ↓
+Tool: check_compliance_rules (regras: nexus-, us-east-1, privado)
+    ↓
+Saída: plano de design em conformidade
+```
