@@ -108,3 +108,49 @@ Tool: check_compliance_rules (regras: nexus-, us-east-1, privado)
     ↓
 Saída: plano de design em conformidade
 ```
+
+### Módulo 02: IaC Copilot (Terraform e Cloud)
+
+#### **Projeto:** [IaC Copilot](module-02)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **Terraform (HCL)** - Código de infraestrutura gerado pelo agente
+- **Checkov** - Scanner estático de segurança de IaC (CLI real, opcional)
+- **OPA (Open Policy Agent)** - Validação de governança (simulada na tool)
+
+**Conceitos abordados:**
+- Pipeline **sequencial** com 2 agentes (`Process.sequential`)
+- Separação de papéis: Arquiteto **gera**, Auditor **valida**
+- Compliance-as-code: scan automático + políticas corporativas
+- Persistência de artefato em disco (`write_file`)
+- Loop de correção: se a auditoria falha, o arquiteto corrige
+
+**Aplicação prática:**
+O Arquiteto gera um `main.tf` para o bucket `nexus-apollo-data` (us-east-1) e o
+Auditor de DevSecOps valida com `run_checkov_scan` e `validate_opa_policies`. As
+políticas OPA bloqueiam violações (região errada, instância cara, ingress público).
+
+**Comandos executados:**
+```bash
+cd module-02
+python labs/modulo2_iac_copilot.py
+```
+> **Gera:** `main.tf` na pasta do módulo.
+
+**Arquitetura:**
+```
+Task 1 (gerar) ──→ Arquiteto ──→ write_file ──→ main.tf
+                                                    ↓
+Task 2 (auditar) ──→ Auditor ──→ run_checkov_scan + validate_opa_policies
+                                                    ↓
+                              Relatório de conformidade (ou correção)
+```
+
+**Checkov vs OPA:**
+| Ferramenta | O que valida | Como roda |
+|---|---|---|
+| `run_checkov_scan` | regras genéricas de segurança IaC | CLI real (degrada com aviso se ausente) |
+| `validate_opa_policies` | regras corporativas (soberania, custo, rede) | simulada na tool |
