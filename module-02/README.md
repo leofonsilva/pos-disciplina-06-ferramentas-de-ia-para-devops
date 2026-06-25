@@ -8,7 +8,7 @@ A partir desta pasta (`module-02/`):
 ```bash
 python labs/modulo2_iac_copilot.py
 ```
-> Requer `GROQ_API_KEY`. O Checkov real é opcional (a tool degrada com aviso se não instalado).
+> Requer `OPENAI_API_KEY`. O Checkov real é opcional (a tool degrada com aviso se não instalado).
 
 ## Peças deste módulo
 - `labs/modulo2_iac_copilot.py` — pipeline sequencial (arquiteto → auditor).
