@@ -102,7 +102,7 @@ Task (desenhar bucket S3)
     ↓
 Crew.kickoff()
     ↓
-Agent: Arquiteto de Cloud  ←→  LLM (Groq/Llama)
+Agent: Arquiteto de Cloud  ←→  LLM (ChatGPT)
     ↓
 Tool: check_compliance_rules (regras: nexus-, us-east-1, privado)
     ↓
@@ -154,3 +154,41 @@ Task 2 (auditar) ──→ Auditor ──→ run_checkov_scan + validate_opa_pol
 |---|---|---|
 | `run_checkov_scan` | regras genéricas de segurança IaC | CLI real (degrada com aviso se ausente) |
 | `validate_opa_policies` | regras corporativas (soberania, custo, rede) | simulada na tool |
+
+### Módulo 03: Agentes para Kubernetes (K8s AI-Ops)
+
+#### **Projeto:** [K8s GitOps & Canary](module-03)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **Kubernetes (YAML V1)** - Manifestos de Deployment + Service
+- **kubectl** - Aplicação no cluster (opcional; modo simulação sem cluster)
+- **GitOps / Canary** - Reconciliação declarativa e análise de rollout
+
+**Conceitos abordados:**
+- Geração de manifestos K8s via IA (`generate_k8s_manifest`)
+- Reconciliação GitOps (`apply_k8s_manifest`) com fallback simulado
+- Canary analysis: decisão Healthy/Unhealthy por métricas
+- Pipeline de 3 etapas: **design → sync → monitor**
+- Divisão de papéis: Arquiteto desenha, SRE aplica e analisa
+
+**Aplicação prática:**
+O Arquiteto gera o manifesto do app `nexus-api-error` (2 réplicas, porta 80), o SRE
+faz o Sync no cluster e depois analisa métricas (`error_rate`, `latency`) para
+decidir se o rollout segue ou faz rollback.
+
+**Comandos executados:**
+```bash
+cd module-03
+python labs/modulo3_k8s_ops.py
+```
+> **Gera:** `nexus-api-error-k8s.yaml` na pasta do módulo.
+
+**Arquitetura:**
+```
+Task design ──→ Arquiteto ──→ generate_k8s_manifest ──→ <app>-k8s.yaml
+Task sync   ──→ SRE       ──→ apply_k8s_manifest (kubectl | simulação)
+Task monitor──→ SRE       ──→ analyze_canary_metrics ──→ Healthy / Unhealthy
+```
