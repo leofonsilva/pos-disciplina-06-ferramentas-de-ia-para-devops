@@ -192,3 +192,54 @@ Task design ──→ Arquiteto ──→ generate_k8s_manifest ──→ <app>-
 Task sync   ──→ SRE       ──→ apply_k8s_manifest (kubectl | simulação)
 Task monitor──→ SRE       ──→ analyze_canary_metrics ──→ Healthy / Unhealthy
 ```
+
+### Módulo 04: Troubleshooting e Diagnóstico com React
+
+#### **Projeto:** [ReAct Self-Healing](module-04)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **Prometheus & Jaeger** - Observabilidade (métricas e traces, simulados)
+- **Kubernetes** - Inspeção de pods e geração do hotfix
+- **Framework ReAct** - Reason + Act + Observe
+
+**Conceitos abordados:**
+- Diagnóstico ReAct: pensar → consultar → observar → correlacionar
+- Observabilidade em 3 frentes: métricas (Prometheus), traces (Jaeger), logs/pod
+- Detecção de falhas: `CrashLoopBackOff`, `OOMKilled`, `ImagePullBackOff`
+- Self-healing: geração do manifesto corrigido com probes
+- Delegação entre SRE (diagnóstico) e Arquiteto (correção)
+
+**Aplicação prática:**
+Com o cenário quebrado `checkout-broken.yaml` (imagem inexistente), o SRE de plantão
+investiga latência/erros via Prometheus + Jaeger + inspeção do pod, e o Arquiteto
+gera o `checkout-k8s-fix.yaml` com imagem válida e probes corretos.
+
+**Comandos executados:**
+```bash
+cd module-04
+# (opcional, com cluster) simula a quebra:
+kubectl get pods
+kubectl get pods -A
+kubectl apply -f checkout-broken.yaml # Arquivo com erros propositais
+kubectl describe pod checkout-api-567759c556-zbs9h
+python labs/modulo4_troubleshooting.py
+kubectl apply -f checkout-k8s-fix.yaml # Arquivo gerado com as correções baseado no checkout-broken.yaml
+kubectl describe pod checkout-api-7874cd7b7d-bj4nk
+```
+> **Entrada:** `checkout-broken.yaml` · **Gera:** `checkout-k8s-fix.yaml`
+
+**Arquitetura:**
+```
+Alerta (lentidão/erro no checkout)
+    ↓
+SRE On-Call (ReAct)
+  ├─ query_prometheus_metrics  (error rate / latency)
+  ├─ query_jaeger_traces       (gargalo: DB PostgreSQL)
+  ├─ inspect_pod_failure       (CrashLoop / OOM)
+  └─ suggest_fix
+    ↓ (delegação)
+Arquiteto ──→ write_file ──→ checkout-k8s-fix.yaml (imagem válida + probes)
+```
