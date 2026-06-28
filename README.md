@@ -362,3 +362,42 @@ Agente DevSecOps ──→ analyze_trivy_report (tool inline)
     ↓
 Relatório priorizado (foco: CVE-2024-3094 / XZ backdoor)
 ```
+
+### Módulo 08: CI/CD Copilot e Otimização
+
+#### **Projeto:** [CI/CD Optimizer](module-08)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **GitHub Actions (YAML)** - Workflow de CI analisado
+- **Tool inline** - `analyze_workflow_yaml`
+
+**Conceitos abordados:**
+- Análise de gargalos em pipelines (falta de cache)
+- Boas práticas de cache de dependências (Node.js / `actions/cache`)
+- Estimativa de economia de tempo/custo de runner
+- Reescrita assistida de YAML
+
+**Aplicação prática:**
+O Engenheiro de Plataforma lê o `workflow_lento.yaml` (sem cache, `npm install`
+baixando tudo sempre), identifica o problema e reescreve aplicando cache, explicando
+a economia estimada.
+
+**Comandos executados:**
+```bash
+cd module-08
+python labs/modulo8_cicd.py
+```
+> **Entrada:** `data/workflow_lento.yaml` (o `workflow_rapido.yaml` original é o
+> gabarito manual e fica só no projeto-raiz).
+
+**Arquitetura:**
+```
+data/workflow_lento.yaml
+    ↓
+Agente CI/CD ──→ analyze_workflow_yaml (tool inline)
+    ↓
+YAML otimizado (com actions/cache) + estimativa de ganho
+```
