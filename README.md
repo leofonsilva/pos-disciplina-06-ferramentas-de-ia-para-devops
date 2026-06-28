@@ -401,3 +401,41 @@ Agente CI/CD ──→ analyze_workflow_yaml (tool inline)
     ↓
 YAML otimizado (com actions/cache) + estimativa de ganho
 ```
+
+### Módulo 09: FinOps e Otimização de Custos
+
+#### **Projeto:** [FinOps Auditor](module-09)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **JSON** - Inventário de recursos de nuvem
+- **Tool inline** - `analyze_cloud_costs`
+
+**Conceitos abordados:**
+- Caça a recursos "zumbis" (volumes EBS órfãos, Elastic IPs soltos)
+- Rightsizing de instâncias superdimensionadas
+- Cálculo de economia estimada (ROI)
+- Auditoria financeira a partir de inventário
+
+**Aplicação prática:**
+O Consultor de FinOps audita o `inventario_cloud.json`, identifica desperdício
+(volume disponível de 500GB, instância `m5.4xlarge` com CPU em 2.5%, IP solto) e
+gera um relatório de cortes com a economia total em dólares.
+
+**Comandos executados:**
+```bash
+cd module-09
+python labs/modulo9_finops.py
+```
+> **Entrada:** `data/inventario_cloud.json`
+
+**Arquitetura:**
+```
+data/inventario_cloud.json
+    ↓
+Agente FinOps ──→ analyze_cloud_costs (tool inline)
+    ↓
+Relatório: zumbis + rightsizing + economia estimada (US$)
+```
