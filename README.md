@@ -439,3 +439,42 @@ Agente FinOps ──→ analyze_cloud_costs (tool inline)
     ↓
 Relatório: zumbis + rightsizing + economia estimada (US$)
 ```
+
+### Módulo 10: RAG de Runbooks e Auto-Remediação
+
+#### **Projeto:** [RAG Runbook Remediation](module-10)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **Markdown** - Runbook corporativo como base de conhecimento
+- **RAG** - Recuperação de documento por serviço
+- **Tool inline** - `consult_runbook`
+
+**Conceitos abordados:**
+- RAG: consultar runbooks oficiais em tempo real
+- Remediação baseada em evidência/documentação
+- Geração de rascunho de post-mortem
+- Resolução de caminho por serviço (`runbook_<service>.md`)
+
+**Aplicação prática:**
+Diante de um alerta de "Saturação de Conexões" no banco, o SRE consulta o runbook do
+serviço `db` (`runbook_db.md`), extrai o comando SQL exato de limpeza de conexões
+ociosas e escreve um rascunho de post-mortem.
+
+**Comandos executados:**
+```bash
+cd module-10
+python labs/modulo10_remediation.py
+```
+> **Entrada:** `data/runbook_db.md`
+
+**Arquitetura:**
+```
+Alerta (saturação de conexões no db)
+    ↓
+Agente SRE de Conhecimento ──→ consult_runbook("db") ──→ data/runbook_db.md
+    ↓
+Plano de remediação (comando SQL) + rascunho de post-mortem
+```
