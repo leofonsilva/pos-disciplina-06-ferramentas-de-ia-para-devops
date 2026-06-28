@@ -325,3 +325,40 @@ Agente ChatOps ──→ execute_terraform(command, manager_password)
   ação destrutiva? ──sim──→ exige GESTOR-APROVA ──→ executa / bloqueia
                    └─não──→ executa (baixo impacto)
 ```
+
+### Módulo 07: Segurança e Compliance (DevSecOps + AI)
+
+#### **Projeto:** [DevSecOps Trivy Audit](module-07)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **Trivy** - Relatório de scan de segurança de imagens (JSON)
+- **Tool inline** - Definida no próprio lab (`analyze_trivy_report`)
+
+**Conceitos abordados:**
+- Triagem inteligente: separar vulnerabilidade real de ruído/falso positivo
+- Priorização por explorabilidade (não só por severidade)
+- Estudo de caso real: backdoor **CVE-2024-3094** (XZ Utils / liblzma)
+- Leitura de evidência (`data/trivy.json`) como entrada do agente
+
+**Aplicação prática:**
+O Analista de DevSecOps lê o relatório real do Trivy, filtra o ruído e gera um
+parecer executivo focado na ameaça crítica de backdoor, com plano de ação imediato.
+
+**Comandos executados:**
+```bash
+cd module-07
+python labs/modulo7_devsecops.py
+```
+> **Entrada:** `data/trivy.json`
+
+**Arquitetura:**
+```
+data/trivy.json
+    ↓
+Agente DevSecOps ──→ analyze_trivy_report (tool inline)
+    ↓
+Relatório priorizado (foco: CVE-2024-3094 / XZ backdoor)
+```
