@@ -243,3 +243,44 @@ SRE On-Call (ReAct)
     ↓ (delegação)
 Arquiteto ──→ write_file ──→ checkout-k8s-fix.yaml (imagem válida + probes)
 ```
+
+### Módulo 05: AIOps e Observabilidade Preditiva
+
+#### **Projeto:** [Predictive AIOps](module-05)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **PromQL** - Linguagem de consulta de métricas (gerada por NL2Query)
+- **Grafana** - Dashboard dinâmico (JSON gerado)
+- **ML conceitual** - Prophet / Isolation Forest (previsão de saturação)
+
+**Conceitos abordados:**
+- NL2Query: traduzir linguagem natural para PromQL/LogQL
+- Observabilidade **preditiva**: prever o alerta antes de ele tocar
+- Análise de séries temporais e detecção de anomalias
+- Geração dinâmica de dashboards Grafana via JSON
+- Fluxo único passando pelas 3 ferramentas
+
+**Aplicação prática:**
+Diante de suspeita de disco enchendo, o agente traduz "qual a porcentagem de disco
+livre?" para PromQL, avalia o histórico (uso 85% + crescimento 2GB/h) gerando uma
+previsão de saturação, e cria um dashboard de incidente para a equipe acompanhar.
+
+**Comandos executados:**
+```bash
+cd module-05
+python labs/modulo5_aiops.py
+```
+> **Gera:** `incident_dashboard.json` (pronto para importar no Grafana).
+
+**Arquitetura:**
+```
+Pedido em linguagem natural
+    ↓
+Agente AIOps
+  ├─ nl_to_promql            → PromQL
+  ├─ predictive_disk_alert   → previsão de saturação (ML)
+  └─ generate_grafana_dashboard → incident_dashboard.json
+```
