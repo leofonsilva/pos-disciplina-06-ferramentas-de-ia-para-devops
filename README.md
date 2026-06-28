@@ -285,3 +285,43 @@ Agente AIOps
   ├─ predictive_disk_alert   → previsão de saturação (ML)
   └─ generate_grafana_dashboard → incident_dashboard.json
 ```
+
+### Módulo 06: ChatOps e Governança
+
+#### **Projeto:** [ChatOps Slack Simulator](module-06)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **Streamlit** - Interface visual do simulador de Slack
+- **Human-in-the-Loop (HITL)** - Aprovação humana para ações críticas
+
+**Conceitos abordados:**
+- ChatOps: operar infraestrutura via chat conversacional
+- Governança e RBAC: ações destrutivas exigem senha de gestor
+- Estado de sessão e histórico de mensagens (Streamlit)
+- Tool com trava de segurança (`execute_terraform`)
+
+**Aplicação prática:**
+Um simulador de Slack onde o `@nexus-bot` intermedia comandos. Ações destrutivas
+(`destruir`, `apagar`, `destroy`) são bloqueadas até o usuário fornecer a senha do
+gestor (`GESTOR-APROVA`).
+
+**Comandos executados:**
+```bash
+cd module-06
+streamlit run labs/modulo6_chatops.py
+# abre em http://localhost:8501
+# teste: "@nexus-bot destrua o banco de dados"  →  senha: GESTOR-APROVA
+```
+
+**Arquitetura:**
+```
+Streamlit (chat) ──→ prompt do usuário
+    ↓
+Agente ChatOps ──→ execute_terraform(command, manager_password)
+    ↓
+  ação destrutiva? ──sim──→ exige GESTOR-APROVA ──→ executa / bloqueia
+                   └─não──→ executa (baixo impacto)
+```
