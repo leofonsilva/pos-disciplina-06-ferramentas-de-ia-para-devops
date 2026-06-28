@@ -272,6 +272,7 @@ previsão de saturação, e cria um dashboard de incidente para a equipe acompan
 ```bash
 cd module-05
 python labs/modulo5_aiops.py
+docker run -d -p 3000:3000 --name meu-grafana grafana/grafana
 ```
 > **Gera:** `incident_dashboard.json` (pronto para importar no Grafana).
 
