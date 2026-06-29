@@ -478,3 +478,43 @@ Agente SRE de Conhecimento ──→ consult_runbook("db") ──→ data/runboo
     ↓
 Plano de remediação (comando SQL) + rascunho de post-mortem
 ```
+
+### Módulo 11: Auto-Remediação Segura com Guardrails
+
+#### **Projeto:** [Guardrails HITL](module-11)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **Terminal interativo** - Aprovação humana em linha (`input`)
+- **Dry-run** - Validação do comando antes da execução
+
+**Conceitos abordados:**
+- Guardrails contra alucinação/ação indevida da IA
+- Human-in-the-loop **obrigatório** para operações de escrita
+- `--dry-run` para prever impacto antes de aplicar
+- Agente criado **direto** (`Agent`), sem a fábrica `core/agents.py`
+
+**Aplicação prática:**
+Um SRE cauteloso detecta erro de imagem no `checkout-api`, propõe o
+`kubectl set image` para a versão estável e apresenta o comando com
+`--dry-run=client`. O terminal pergunta se você aprova a execução em produção
+(`sim/não`) antes de "aplicar".
+
+**Comandos executados:**
+```bash
+cd module-11
+python labs/modulo11_guardrails.py
+# ao final: "Você aprova a execução? (sim/não)"
+```
+
+**Arquitetura:**
+```
+Agent (Safety_SRE, criado direto) ──→ LLM
+    ↓
+Proposta de comando + dry-run
+    ↓
+input() humano ── sim ──→ executa (simulado)
+              └─ não ──→ aborta e registra auditoria
+```
