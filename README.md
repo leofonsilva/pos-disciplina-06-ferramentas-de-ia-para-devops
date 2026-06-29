@@ -518,3 +518,43 @@ Proposta de comando + dry-run
 input() humano ── sim ──→ executa (simulado)
               └─ não ──→ aborta e registra auditoria
 ```
+
+### Módulo 12: Projeto Integrador
+
+#### **Projeto:** [Nexus-Bot Full Stack](module-12)
+
+**Tecnologias utilizadas:**
+- **Python** - Linguagem principal dos laboratórios
+- **CrewAI** - Framework de orquestração de agentes (`Agent`, `Task`, `Crew`)
+- **LLM (Large Language Model)** - Motor com raciocínio estruturado
+- **CrewAI `Process.hierarchical`** - Processo hierárquico com manager
+- **Delegação multiagente** - Manager coordena especialistas
+
+**Conceitos abordados:**
+- Orquestração hierárquica: um **manager** coordena os especialistas
+- `manager_agent` como "cérebro" (delegação, sem task manual por agente)
+- Resolução de incidente **multidomínio** (SRE + Segurança + FinOps)
+- Consolidação em relatório executivo com ROI
+
+**Aplicação prática:**
+Um incidente crítico combina checkout fora do ar (erro 500), backdoor XZ detectado e
+pico de custo de 40%. O **Nexus Manager** delega ao SRE (logs K8s), ao DevSecOps
+(risco do backdoor) e ao FinOps (causa do custo), consolidando tudo num relatório.
+
+**Comandos executados:**
+```bash
+cd module-12
+python labs/modulo12_projeto_final.py
+```
+
+**Arquitetura:**
+```
+Missão multidomínio
+    ↓
+Nexus Manager (Process.hierarchical, manager_agent)
+    ├─ delega → SRE On-Call        (logs Kubernetes)
+    ├─ delega → DevSecOps Analyst  (risco do backdoor XZ)
+    └─ delega → FinOps Consultant  (pico de custo)
+    ↓
+Relatório executivo consolidado + ROI
+```
