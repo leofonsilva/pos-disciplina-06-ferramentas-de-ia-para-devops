@@ -558,3 +558,99 @@ Nexus Manager (Process.hierarchical, manager_agent)
     ↓
 Relatório executivo consolidado + ROI
 ```
+
+### Módulo 13: AI-Ops Enterprise – Do Terminal ao Escalável
+
+#### **Projeto:** [Cloud-Native Deploy](module-13)
+
+**Tecnologias utilizadas:**
+- **Docker** - Imagem `nexus-bot:v1` (`python:3.12-slim`)
+- **Kubernetes (Minikube)** - Orquestração local
+- **LocalStack** - Cloud AWS simulada (S3/SQS/IAM)
+- **Ollama** - LLM offline (`llama3.1`)
+- **Streamlit** - Painel visual (S3 Explorer + OPA Sandbox)
+
+**Conceitos abordados:**
+- Containerização do projeto completo (`Dockerfile`, `.dockerignore`, `PYTHONPATH`)
+- Kubernetes local com Minikube e driver Docker
+- Secrets de cluster (`OPENAI_API_KEY` em base64)
+- Cloud simulada e DNS interno (`http://localstack:4566`, `http://ollama:11434`)
+- Integração de serviços: bot + UI + cloud simulada + LLM offline
+
+**Aplicação prática:**
+Este módulo **não traz código Python novo** — ele empacota e orquestra tudo dos
+módulos 1–12. O `Dockerfile` faz `COPY . .` e o `CMD` roda o projeto final; os
+manifestos `k8s/*` sobem o bot, a UI, o LocalStack e o Ollama no cluster.
+
+**Comandos executados:**
+```bash
+cd module-13
+docker build -t nexus-bot:v1 .
+docker run --rm -e OPENAI_API_KEY="sk_sua_chave_aqui" nexus-bot:v1
+
+minikube start --driver=docker
+eval $(minikube docker-env)
+minikube dashboard
+
+docker build -t nexus-bot:v1 .
+echo -n "sk_sua_chave_aqui" | base64 -w 0; echo
+
+kubectl apply -f k8s/secret.yaml
+kubectl get secret
+
+kubectl apply -f k8s/deploy.yaml
+kubectl get deploy
+kubectl get pod
+kubectl logs nexus-bot-78fd6b64d5-n2p99
+kubectl delete -f k8s/deploy.yml
+
+kubectl apply -f k8s/job.yaml
+kubectl get job
+kubectl get pod
+kubectl logs nexus-bot-run-66bv8
+kubectl describe job nexus-bot-run
+
+kubectl apply -f k8s/localstack.yaml
+kubectl get pod
+kubectl logs localstack-7dc75df7db-4stlg
+kubectl exec -it deployment/localstack -- awslocal s3 ls
+kubectl exec -it deployment/localstack -- awslocal s3 mb s3://nexus-logs
+kubectl exec -it deployment/localstack -- awslocal s3 mb s3://nexus-logs-2
+kubectl exec -it deployment/localstack -- sh -c "echo 'Relatorio Nexus v2' > teste.txt && awslocal s3 cp teste.txt s3://nexus-logs-2/"
+kubectl exec -it deployment/localstack -- awslocal s3 ls nexus-logs-2
+
+kubectl apply -f k8s/connect-test.yaml
+kubectl get pods
+kubectl logs nexus-conn-test-9hzsv
+
+kubectl apply -f k8s/streamlit.yaml
+kubectl get pods
+minikube service nexus-ui
+kubectl exec -it deployment/localstack -- awslocal s3 mb s3://nexus-logs-3
+kubectl exec -it deployment/localstack -- sh -c "echo 'Relatorio Nexus v2' > teste.txt && awslocal s3 cp teste.txt s3://nexus-logs-3/"
+kubectl exec -it deployment/localstack -- awslocal s3 ls
+
+kubectl apply -f k8s/ollama.yaml
+kubectl get svc
+kubectl get pods
+
+ollama run llama3.1 "Olá! Você está rodando no cluster do Leonardo?"
+
+kubectl describe node minikube | grep -A 5 "Capacity"
+kubectl describe node minikube
+
+```
+
+**Arquitetura Cloud-Native:**
+```
+Dockerfile (COPY . . + CMD modulo12)
+    ↓ docker build → nexus-bot:v1
+    ↓
+Minikube (cluster local)
+    ├─ k8s/secret.yml      → OPENAI_API_KEY
+    ├─ k8s/localstack.yml  → cloud simulada (S3/SQS/IAM) :4566
+    ├─ k8s/ollama.yaml     → LLM offline :11434
+    └─ k8s/streamlit.yaml  → UI (ui/app.py) :8501
+    ↓
+nexus-bot (agentes) ←→ LocalStack ←→ Ollama ←→ Streamlit
+```
