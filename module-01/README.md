@@ -8,11 +8,11 @@ A partir desta pasta (`module-01/`):
 ```bash
 python labs/modulo1_foundation.py
 ```
-> Requer `GROQ_API_KEY`. Copie o `.env.example` para `.env` nesta pasta e preencha a chave.
+> Requer `OPENAI_API_KEY`. Copie o `.env.example` para `.env` nesta pasta e preencha a chave.
 
 ## Peças deste módulo
 - `labs/modulo1_foundation.py` — orquestração (1 agente, 1 task).
-- `core/` — `llm_config` (Groq/Llama) + `agents` (fábrica de agentes).
+- `core/` — `llm_config` + `agents` (fábrica de agentes).
 - `tools/policy_rag.py` — `check_compliance_rules` (única tool usada aqui).
 
 ## Arquivos gerados ao executar

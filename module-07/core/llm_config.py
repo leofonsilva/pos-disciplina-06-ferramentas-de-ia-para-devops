@@ -12,7 +12,7 @@ nexus_llm = LLM(
     api_key=os.getenv("OPENAI_API_KEY"),
     temperature=0.2
 
-# Grok - Não funcionou com CrewAI
+# Groq - Não funcionou com CrewAI
 # nexus_llm = LLM(
 #     model="groq/llama-3.1-8b-instant",
 #     api_key=os.getenv("GROQ_API_KEY"),
