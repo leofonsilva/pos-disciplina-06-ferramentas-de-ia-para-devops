@@ -1,7 +1,11 @@
 # Pós Disciplina 06 - Ferramentas de IA para DevOps
 
 ## Introdução
-Pendente...
+Este repositório contém todos os laboratórios desenvolvidos durante a disciplina **Ferramentas de IA para DevOps (AI-Ops e Engenharia Agêntica)**, abordando desde conceitos fundamentais de IA consultiva até a operação autônoma de infraestrutura real sob governança, ulminando no deploy cloud-native de um ecossistema multiagente.
+
+Cada módulo demonstra na prática como construir agentes de IA capazes de projetar infraestrutura, gerar e auditar código (IaC), operar Kubernetes, diagnosticar incidentes com o framework ReAct, prever saturação de recursos (AIOps), conversar via ChatOps com  uman-in-the-loop, triar vulnerabilidades de segurança, otimizar pipelines de CI/CD, reduzir custos de nuvem (FinOps), consultar runbooks via RAG e, por fim, orquestrar todos esses especialistas de forma hierárquica. O projeto usa **Python** como linguagem principal, **CrewAI** como framework de agentes e o **Chat GPT** como motor LLM central, evoluindo até a containerização com **Docker, Kubernetes (Minikube), LocalStack e Ollama**.
+
+Os módulos foram **isolados a partir do material original do curso** (que mantinha tudo numa raiz única, com código repetido e arquivos gerados misturados). Cada `module-XX/` é autocontido e puro (só fonte + entradas), para estudar uma aula de cada vez com clareza.
 
 ## Setup Python + Virtual Environment (WSL Ubuntu 24)
 
